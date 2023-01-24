@@ -13,3 +13,11 @@ func PanicIfUserError(err error) {
 		panic(err)
 	}
 }
+
+func PanicIfVideoError(err error) {
+	if err != nil {
+		err = errors.New("videoService--" + err.Error())
+		util.LogrusObj.Info(err)
+		panic(err)
+	}
+}

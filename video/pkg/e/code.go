@@ -11,9 +11,8 @@ const (
 	ErrorFailEncryption = 10006
 	ErrorNotCompare     = 10007
 
-	// 文件
-	ErrorUploadFail   = 20001
-	ErrorDownloadFail = 20002
+	HaveSignUp           = 20001
+	ErrorActivityTimeout = 20002
 
 	ErrorAuthCheckTokenFail    = 30001 //token 错误
 	ErrorAuthCheckTokenTimeout = 30002 //token 过期

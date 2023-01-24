@@ -4,9 +4,9 @@ var MsgFlags = map[int32]string{
 	SUCCESS: "ok",
 	ERROR:   "fail",
 
-	ErrorUploadFail:            "文件上传失败",
-	ErrorDownloadFail:          "文件保存失败",
 	InvalidParams:              "请求参数错误",
+	HaveSignUp:                 "已经报名了",
+	ErrorActivityTimeout:       "活动过期了",
 	ErrorAuthCheckTokenFail:    "Token鉴权失败",
 	ErrorAuthCheckTokenTimeout: "Token已超时",
 	ErrorAuthToken:             "Token生成失败",

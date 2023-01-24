@@ -1,17 +1,17 @@
 package res
 
 import (
-	"api-gateway/pkg/e"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"video/pkg/e"
 )
 
 // Response 基础序列化器
 type Response struct {
-	StatusCode int32       `json:"status_code"`
-	Data       interface{} `json:"Data"`
-	StatusMsg  string      `json:"msg"`
-	Error      string      `json:"Error"`
+	Status int32       `json:"Status"`
+	Data   interface{} `json:"Data"`
+	Msg    string      `json:"Msg"`
+	Error  string      `json:"Error"`
 }
 
 // DataList 带有总数的Data结构
