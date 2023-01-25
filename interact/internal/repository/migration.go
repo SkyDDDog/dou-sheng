@@ -6,6 +6,7 @@ func migration() {
 	err := DB.Set("gorm:table_options", "charset=utf8mb4").
 		AutoMigrate(
 			&UserFavorite{},
+			&VideoComment{},
 		)
 	if err != nil {
 		fmt.Println("migration err", err)

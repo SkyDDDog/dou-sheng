@@ -30,7 +30,7 @@ func main() {
 	server := grpc.NewServer()
 	defer server.Stop()
 	// 绑定服务
-	service.RegisterUserServiceServer(server, handler.NewUserService())
+	service.RegisterInteractServiceServer(server, handler.NewInteractService())
 	lis, err := net.Listen("tcp", grpcAddress)
 	if err != nil {
 		panic(err)
