@@ -1,0 +1,22 @@
+server:
+  domain: relation
+  version: 1.0
+  jwtSecret: ErHuo
+  grpcAddress: "127.0.0.1:10004"
+  host: skydog.ltd
+
+mysql:
+  driverName: mysql
+  host: 127.0.0.1
+  port: 3306
+  database: dousheng
+  username: root
+  password: 9738faq
+  charset: utf8mb4
+
+etcd:
+  address: 127.0.0.1:2379
+
+redis:
+  address: 127.0.0.1:6379
+  password:

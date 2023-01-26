@@ -29,3 +29,11 @@ func PanicIfInteractError(err error) {
 		panic(err)
 	}
 }
+
+func PanicIfRelationError(err error) {
+	if err != nil {
+		err = errors.New("relationService--" + err.Error())
+		util.LogrusObj.Info(err)
+		panic(err)
+	}
+}

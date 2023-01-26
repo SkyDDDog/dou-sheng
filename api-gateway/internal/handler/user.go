@@ -46,13 +46,24 @@ func UserLogin(ginCtx *gin.Context) {
 	ginCtx.JSON(http.StatusOK, r)
 }
 
-// 用户登录
+// 用户信息
 func UserShow(ginCtx *gin.Context) {
 	var userReq service.DouyinUserRequest
 	PanicIfUserError(ginCtx.BindQuery(&userReq))
 	// 从gin.Key中取出服务实例
 	userService := ginCtx.Keys["user"].(service.UserServiceClient)
+	relationService := ginCtx.Keys["relation"].(service.RelationServiceClient)
+	claims, _ := util.ParseToken(userReq.Token)
 	userResp, err := userService.UserShow(context.Background(), &userReq)
+	relationReq := &service.UserId_Request{
+		UserId:      userResp.User.Id,
+		RequesterId: claims.UserID,
+	}
+	relationInfo, err := relationService.UserRelationInfoById(context.Background(), relationReq)
+	PanicIfRelationError(err)
+	userResp.User.FollowCount = relationInfo.FollowCount
+	userResp.User.FollowerCount = relationInfo.FollowerCount
+	userResp.User.IsFollow = relationInfo.IsFollow
 	PanicIfUserError(err)
 	r := res.UserResponse{
 		StatusCode: userResp.StatusCode,

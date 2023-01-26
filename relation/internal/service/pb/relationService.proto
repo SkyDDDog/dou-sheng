@@ -1,0 +1,58 @@
+syntax = "proto3";
+package pb;
+option go_package = "/internal/service;service";
+import "userModels.proto";
+
+message douyin_relation_action_request {
+  string token = 1; // 用户鉴权token
+  int64 to_user_id = 2; // 对方用户id
+  int32 action_type = 3;  // 1-关注, 2-取消关注
+  int64 user_id = 4;
+}
+
+message douyin_relation_action_response {
+  int32 status_code = 1;  // 状态码, 0-成功, 其他值-失败
+  string status_msg = 2;  // 返回状态描述
+}
+
+message douyin_relation_follow_list_request {
+  int64 user_id = 1;  // 用户id
+  string token = 2; // 用户鉴权token
+}
+
+message douyin_relation_follow_list_response {
+  int32 status_code = 1;  // 状态码, 0-成功, 其他值-失败
+  string status_msg = 2;  // 返回状态描述
+  repeated User user_list = 3;  // 用户信息列表
+}
+
+message douyin_relation_follower_list_request {
+  int64 user_id = 1;  // 用户id
+  string token = 2; // 用户鉴权token
+}
+
+message douyin_relation_follower_list_response {
+  int32 status_code = 1;  // 状态码, 0-成功, 其他值-失败
+  string status_msg = 2;  // 返回状态描述
+  repeated User user_list = 3;  // 用户列表
+}
+
+message douyin_relation_friend_list_request {
+  int64 user_id = 1;  // 用户id
+  string token = 2; // 用户鉴权token
+}
+
+message douyin_relation_friend_list_response {
+  int32 status_code = 1;  // 状态码, 0-成功, 其他值-失败
+  string status_msg = 2;  // 返回状态描述
+  repeated User user_list = 3;  // 用户列表
+}
+
+service RelationService {
+  rpc RelationAction(douyin_relation_action_request) returns(douyin_relation_action_response);
+  rpc FollowList(douyin_relation_follow_list_request) returns(douyin_relation_follow_list_response);
+  rpc FollowerList(douyin_relation_follower_list_request) returns(douyin_relation_follower_list_response);
+  rpc FriendList(douyin_relation_friend_list_request) returns(douyin_relation_friend_list_response);
+  rpc UserRelationInfoById(UserId_Request) returns(User);
+}
+

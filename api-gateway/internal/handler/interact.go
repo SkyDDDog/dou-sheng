@@ -36,6 +36,7 @@ func FavoriteList(ginCtx *gin.Context) {
 	interactService := ginCtx.Keys["interact"].(service.InteractServiceClient)
 	videoService := ginCtx.Keys["video"].(service.VideoServiceClient)
 	userService := ginCtx.Keys["user"].(service.UserServiceClient)
+	relationService := ginCtx.Keys["relation"].(service.RelationServiceClient)
 	claims, _ := util.ParseToken(flReq.Token)
 	resp, err := interactService.FavoriteList(context.Background(), &flReq)
 	PanicIfInteractError(err)
@@ -58,6 +59,16 @@ func FavoriteList(ginCtx *gin.Context) {
 		video.CommentCount = videoInfo.CommentCount
 		video.IsFavorite = videoInfo.IsFavorite
 
+		relationReq := &service.UserId_Request{
+			UserId:      video.Author.Id,
+			RequesterId: claims.UserID,
+		}
+		relationInfo, err := relationService.UserRelationInfoById(context.Background(), relationReq)
+		PanicIfRelationError(err)
+		video.Author.FollowCount = relationInfo.FollowCount
+		video.Author.FollowerCount = relationInfo.FollowerCount
+		video.Author.IsFollow = relationInfo.IsFollow
+
 		resp.VideoList[i] = video
 	}
 	r := res.FavoriteResponse{
@@ -75,6 +86,7 @@ func CommentAction(ginCtx *gin.Context) {
 	// 从gin.Key中取出服务实例
 	interactService := ginCtx.Keys["interact"].(service.InteractServiceClient)
 	userService := ginCtx.Keys["user"].(service.UserServiceClient)
+	relationService := ginCtx.Keys["relation"].(service.RelationServiceClient)
 	claims, _ := util.ParseToken(caReq.Token)
 	caReq.UserId = claims.UserID
 	resp, err := interactService.CommentAction(context.Background(), &caReq)
@@ -82,7 +94,19 @@ func CommentAction(ginCtx *gin.Context) {
 	userReq := &service.UserId_Request{UserId: caReq.UserId}
 	user, err := userService.UserById(context.Background(), userReq)
 	PanicIfUserError(err)
+
+	relationReq := &service.UserId_Request{
+		UserId:      user.Id,
+		RequesterId: claims.UserID,
+	}
+	relationInfo, err := relationService.UserRelationInfoById(context.Background(), relationReq)
+	PanicIfRelationError(err)
+	user.FollowCount = relationInfo.FollowCount
+	user.FollowerCount = relationInfo.FollowerCount
+	user.IsFollow = relationInfo.IsFollow
+
 	resp.Comment.User = user
+
 	r := res.CommentResponse{
 		StatusCode: resp.StatusCode,
 		StatusMsg:  e.GetMsg(resp.GetStatusCode()),
@@ -98,12 +122,25 @@ func CommentList(ginCtx *gin.Context) {
 	// 从gin.Key中取出服务实例
 	interactService := ginCtx.Keys["interact"].(service.InteractServiceClient)
 	userService := ginCtx.Keys["user"].(service.UserServiceClient)
+	relationService := ginCtx.Keys["relation"].(service.RelationServiceClient)
+	claims, _ := util.ParseToken(clReq.Token)
 	resp, err := interactService.CommentList(context.Background(), &clReq)
 	PanicIfInteractError(err)
 	for i, _ := range resp.CommentList {
 		userReq := &service.UserId_Request{UserId: resp.CommentList[i].User.Id}
 		user, err := userService.UserById(context.Background(), userReq)
 		PanicIfUserError(err)
+
+		relationReq := &service.UserId_Request{
+			UserId:      user.Id,
+			RequesterId: claims.UserID,
+		}
+		relationInfo, err := relationService.UserRelationInfoById(context.Background(), relationReq)
+		PanicIfRelationError(err)
+		user.FollowCount = relationInfo.FollowCount
+		user.FollowerCount = relationInfo.FollowerCount
+		user.IsFollow = relationInfo.IsFollow
+
 		resp.CommentList[i].User = user
 	}
 	r := res.CommentListResponse{

@@ -47,7 +47,7 @@ func BuildVideo(item Video) *service.Video {
 	prefix := "http://" + viper.GetString("server.host") + ":9999/static/"
 	return &service.Video{
 		Id:            item.VideoId,
-		Author:        nil,
+		Author:        &service.User{Id: item.AuthorId},
 		PlayUrl:       prefix + "video/" + strconv.FormatInt(item.VideoId, 10) + ".mp4",
 		CoverUrl:      prefix + "cover/" + strconv.FormatInt(item.VideoId, 10) + ".png",
 		FavoriteCount: 0,

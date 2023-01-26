@@ -56,6 +56,7 @@ func VideoList(ginCtx *gin.Context) {
 	// 从gin.Key中取出服务实例
 	videoService := ginCtx.Keys["video"].(service.VideoServiceClient)
 	interactService := ginCtx.Keys["interact"].(service.InteractServiceClient)
+	relationService := ginCtx.Keys["relation"].(service.RelationServiceClient)
 	claims, _ := util.ParseToken(videoReq.Token)
 	videoResp, err := videoService.VideoList(context.Background(), &videoReq)
 	PanicIfVideoError(err)
@@ -70,6 +71,16 @@ func VideoList(ginCtx *gin.Context) {
 		videoResp.VideoList[i].FavoriteCount = videoInfo.FavoriteCount
 		videoResp.VideoList[i].CommentCount = videoInfo.CommentCount
 		videoResp.VideoList[i].IsFavorite = videoInfo.IsFavorite
+
+		relationReq := &service.UserId_Request{
+			UserId:      videoResp.VideoList[i].Author.Id,
+			RequesterId: claims.UserID,
+		}
+		relationInfo, err := relationService.UserRelationInfoById(context.Background(), relationReq)
+		PanicIfRelationError(err)
+		videoResp.VideoList[i].Author.FollowCount = relationInfo.FollowCount
+		videoResp.VideoList[i].Author.FollowerCount = relationInfo.FollowerCount
+		videoResp.VideoList[i].Author.IsFollow = relationInfo.IsFollow
 	}
 
 	r := res.VideoResponse{
@@ -86,7 +97,9 @@ func VideoFeed(ginCtx *gin.Context) {
 	PanicIfVideoError(ginCtx.BindQuery(&videoReq))
 	// 从gin.Key中取出服务实例
 	videoService := ginCtx.Keys["video"].(service.VideoServiceClient)
+	userService := ginCtx.Keys["user"].(service.UserServiceClient)
 	interactService := ginCtx.Keys["interact"].(service.InteractServiceClient)
+	relationService := ginCtx.Keys["relation"].(service.RelationServiceClient)
 	claims, _ := util.ParseToken(videoReq.Token)
 	videoResp, err := videoService.VideoFeed(context.Background(), &videoReq)
 	PanicIfVideoError(err)
@@ -100,6 +113,18 @@ func VideoFeed(ginCtx *gin.Context) {
 		videoResp.VideoList[i].FavoriteCount = videoInfo.FavoriteCount
 		videoResp.VideoList[i].CommentCount = videoInfo.CommentCount
 		videoResp.VideoList[i].IsFavorite = videoInfo.IsFavorite
+		relationReq := &service.UserId_Request{
+			UserId:      videoResp.VideoList[i].Author.Id,
+			RequesterId: claims.UserID,
+		}
+		relationInfo, err := relationService.UserRelationInfoById(context.Background(), relationReq)
+		PanicIfRelationError(err)
+		videoResp.VideoList[i].Author.FollowCount = relationInfo.FollowCount
+		videoResp.VideoList[i].Author.FollowerCount = relationInfo.FollowerCount
+		videoResp.VideoList[i].Author.IsFollow = relationInfo.IsFollow
+		user, err := userService.UserById(context.Background(), relationReq)
+		PanicIfUserError(err)
+		videoResp.VideoList[i].Author.Name = user.Name
 	}
 
 	r := res.FeedResponse{
