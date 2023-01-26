@@ -25,6 +25,7 @@ type UserServiceClient interface {
 	UserLogin(ctx context.Context, in *DouyinUserLoginRequest, opts ...grpc.CallOption) (*DouyinUserLoginResponse, error)
 	UserRegister(ctx context.Context, in *DouyinUserRegisterRequest, opts ...grpc.CallOption) (*DouyinUserRegisterResponse, error)
 	UserShow(ctx context.Context, in *DouyinUserRequest, opts ...grpc.CallOption) (*DouyinUserResponse, error)
+	UserById(ctx context.Context, in *UserId_Request, opts ...grpc.CallOption) (*User, error)
 }
 
 type userServiceClient struct {
@@ -62,6 +63,15 @@ func (c *userServiceClient) UserShow(ctx context.Context, in *DouyinUserRequest,
 	return out, nil
 }
 
+func (c *userServiceClient) UserById(ctx context.Context, in *UserId_Request, opts ...grpc.CallOption) (*User, error) {
+	out := new(User)
+	err := c.cc.Invoke(ctx, "/pb.UserService/UserById", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -69,6 +79,7 @@ type UserServiceServer interface {
 	UserLogin(context.Context, *DouyinUserLoginRequest) (*DouyinUserLoginResponse, error)
 	UserRegister(context.Context, *DouyinUserRegisterRequest) (*DouyinUserRegisterResponse, error)
 	UserShow(context.Context, *DouyinUserRequest) (*DouyinUserResponse, error)
+	UserById(context.Context, *UserId_Request) (*User, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -84,6 +95,9 @@ func (UnimplementedUserServiceServer) UserRegister(context.Context, *DouyinUserR
 }
 func (UnimplementedUserServiceServer) UserShow(context.Context, *DouyinUserRequest) (*DouyinUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserShow not implemented")
+}
+func (UnimplementedUserServiceServer) UserById(context.Context, *UserId_Request) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserById not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -152,6 +166,24 @@ func _UserService_UserShow_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_UserById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserId_Request)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).UserById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.UserService/UserById",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).UserById(ctx, req.(*UserId_Request))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -170,6 +202,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UserShow",
 			Handler:    _UserService_UserShow_Handler,
+		},
+		{
+			MethodName: "UserById",
+			Handler:    _UserService_UserById_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

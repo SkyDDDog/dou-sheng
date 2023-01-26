@@ -21,3 +21,11 @@ func PanicIfVideoError(err error) {
 		panic(err)
 	}
 }
+
+func PanicIfInteractError(err error) {
+	if err != nil {
+		err = errors.New("interactService--" + err.Error())
+		util.LogrusObj.Info(err)
+		panic(err)
+	}
+}

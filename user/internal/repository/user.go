@@ -82,3 +82,8 @@ func BuildUser(item User) *service.User {
 		IsFollow:      false,
 	}
 }
+
+func (*User) UserById(userId int64) (user User, err error) {
+	err = DB.Where("user_id = ?", userId).First(&user).Error
+	return user, err
+}

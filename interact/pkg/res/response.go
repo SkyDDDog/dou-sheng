@@ -2,8 +2,8 @@ package res
 
 import (
 	"github.com/gin-gonic/gin"
+	"interact/pkg/e"
 	"net/http"
-	"user/pkg/e"
 )
 
 // Response 基础序列化器

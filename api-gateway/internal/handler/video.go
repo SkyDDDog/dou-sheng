@@ -44,7 +44,6 @@ func ActionVideo(ginCtx *gin.Context) {
 	}
 	r := res.Response{
 		StatusCode: videoResp.GetStatusCode(),
-		Data:       nil,
 		StatusMsg:  e.GetMsg(videoResp.GetStatusCode()),
 		Error:      "",
 	}
@@ -56,8 +55,22 @@ func VideoList(ginCtx *gin.Context) {
 	PanicIfVideoError(ginCtx.BindQuery(&videoReq))
 	// 从gin.Key中取出服务实例
 	videoService := ginCtx.Keys["video"].(service.VideoServiceClient)
+	interactService := ginCtx.Keys["interact"].(service.InteractServiceClient)
+	claims, _ := util.ParseToken(videoReq.Token)
 	videoResp, err := videoService.VideoList(context.Background(), &videoReq)
 	PanicIfVideoError(err)
+	PanicIfVideoError(err)
+	for i, _ := range videoResp.VideoList {
+		interactReq := &service.VideoId_Request{
+			VideoId:     videoResp.VideoList[i].Id,
+			RequesterId: claims.UserID,
+		}
+		videoInfo, err := interactService.VideoInteractInfoById(context.Background(), interactReq)
+		PanicIfInteractError(err)
+		videoResp.VideoList[i].FavoriteCount = videoInfo.FavoriteCount
+		videoResp.VideoList[i].CommentCount = videoInfo.CommentCount
+		videoResp.VideoList[i].IsFavorite = videoInfo.IsFavorite
+	}
 
 	r := res.VideoResponse{
 		StatusCode: videoResp.GetStatusCode(),
@@ -73,8 +86,21 @@ func VideoFeed(ginCtx *gin.Context) {
 	PanicIfVideoError(ginCtx.BindQuery(&videoReq))
 	// 从gin.Key中取出服务实例
 	videoService := ginCtx.Keys["video"].(service.VideoServiceClient)
+	interactService := ginCtx.Keys["interact"].(service.InteractServiceClient)
+	claims, _ := util.ParseToken(videoReq.Token)
 	videoResp, err := videoService.VideoFeed(context.Background(), &videoReq)
 	PanicIfVideoError(err)
+	for i, _ := range videoResp.VideoList {
+		interactReq := &service.VideoId_Request{
+			VideoId:     videoResp.VideoList[i].Id,
+			RequesterId: claims.UserID,
+		}
+		videoInfo, err := interactService.VideoInteractInfoById(context.Background(), interactReq)
+		PanicIfInteractError(err)
+		videoResp.VideoList[i].FavoriteCount = videoInfo.FavoriteCount
+		videoResp.VideoList[i].CommentCount = videoInfo.CommentCount
+		videoResp.VideoList[i].IsFavorite = videoInfo.IsFavorite
+	}
 
 	r := res.FeedResponse{
 		StatusCode: videoResp.GetStatusCode(),

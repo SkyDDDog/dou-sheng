@@ -8,10 +8,9 @@ import (
 
 // Response 基础序列化器
 type Response struct {
-	StatusCode int32       `json:"status_code"`
-	Data       interface{} `json:"Data"`
-	StatusMsg  string      `json:"msg"`
-	Error      string      `json:"Error"`
+	StatusCode int32  `json:"status_code"`
+	StatusMsg  string `json:"msg"`
+	Error      string `json:"Error"`
 }
 
 // DataList 带有总数的Data结构

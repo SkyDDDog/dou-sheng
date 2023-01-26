@@ -64,3 +64,8 @@ func BuildVideos(item []Video) (vList []*service.Video) {
 	}
 	return vList
 }
+
+func (*Video) VideoById(videoId int64) (video Video, err error) {
+	err = DB.Where("video_id = ?", videoId).First(&video).Error
+	return video, err
+}

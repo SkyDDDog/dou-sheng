@@ -54,3 +54,13 @@ func (*UserService) UserShow(ctx context.Context, req *service.DouyinUserRequest
 	resp.User = repository.BuildUser(user)
 	return resp, err
 }
+
+func (*UserService) UserById(ctx context.Context, req *service.UserId_Request) (resp *service.User, err error) {
+	var user repository.User
+	user, err = user.UserById(req.UserId)
+	if err != nil {
+		return nil, err
+	}
+	resp = repository.BuildUser(user)
+	return resp, nil
+}

@@ -13,3 +13,4 @@ etcd:
 domain:
   user: user
   video: video
+  interact: interact

@@ -53,3 +53,13 @@ func (*VideoService) VideoFeed(ctx context.Context, req *service.DouyinFeedReque
 	resp.StatusMsg = e.GetMsg(resp.GetStatusCode())
 	return resp, err
 }
+
+func (*VideoService) VideoById(ctx context.Context, req *service.VideoId_Request) (resp *service.Video, err error) {
+	var video repository.Video
+	video, err = video.VideoById(req.VideoId)
+	if err != nil {
+		return nil, err
+	}
+	resp = repository.BuildVideo(video)
+	return resp, nil
+}
