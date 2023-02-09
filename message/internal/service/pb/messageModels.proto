@@ -1,0 +1,9 @@
+syntax = "proto3";
+package pb;
+option go_package = "/internal/service;service";
+
+message Message {
+  int64 id = 1; // 消息id
+  string content = 2; // 消息内容
+  string create_time = 3; // 消息创建时间
+}

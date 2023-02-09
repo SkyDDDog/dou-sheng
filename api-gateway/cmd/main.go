@@ -42,6 +42,8 @@ func startListen() {
 	videoServiceName := viper.GetString("domain.video")
 	interactServiceName := viper.GetString("domain.interact")
 	relationServiceName := viper.GetString("domain.relation")
+	messageServiceName := viper.GetString("domain.message")
+
 	// RPC 连接
 	connUser, err := RPCConnect(ctx, userServiceName, etcdRegister)
 	if err != nil {
@@ -67,7 +69,13 @@ func startListen() {
 	}
 	relationService := service.NewRelationServiceClient(connRelation)
 
-	ginRouter := routes.NewRouter(userService, videoService, interactService, relationService)
+	connMessage, err := RPCConnect(ctx, messageServiceName, etcdRegister)
+	if err != nil {
+		return
+	}
+	messageService := service.NewMessageServiceClient(connMessage)
+
+	ginRouter := routes.NewRouter(userService, videoService, interactService, relationService, messageService)
 	server := &http.Server{
 		Addr:           viper.GetString("server.port"),
 		Handler:        ginRouter,

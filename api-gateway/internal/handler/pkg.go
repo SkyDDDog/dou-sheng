@@ -37,3 +37,11 @@ func PanicIfRelationError(err error) {
 		panic(err)
 	}
 }
+
+func PanicIfMessageError(err error) {
+	if err != nil {
+		err = errors.New("messageService--" + err.Error())
+		util.LogrusObj.Info(err)
+		panic(err)
+	}
+}

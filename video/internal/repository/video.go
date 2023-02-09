@@ -44,7 +44,7 @@ func (*Video) VideoFeed(req *service.DouyinFeedRequest) (videoList []Video, err 
 }
 
 func BuildVideo(item Video) *service.Video {
-	prefix := "http://" + viper.GetString("server.host") + ":9999/static/"
+	prefix := "http://" + viper.GetString("server.host") + ":11111/static/"
 	return &service.Video{
 		Id:            item.VideoId,
 		Author:        &service.User{Id: item.AuthorId},
