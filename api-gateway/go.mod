@@ -3,6 +3,7 @@ module api-gateway
 go 1.16
 
 require (
+	github.com/bwmarrin/snowflake v0.3.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/disintegration/imaging v1.6.2
 	github.com/gin-gonic/gin v1.7.7

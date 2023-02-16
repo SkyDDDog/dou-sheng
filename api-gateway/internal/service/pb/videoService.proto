@@ -8,6 +8,9 @@ message douyin_publish_action_request {
   bytes data = 2; // 视频数据
   string title = 3; // 视频标题
   int64 user_id = 4;
+  int64 video_id = 5;
+  string video_url = 6;
+  string cover_url = 7;
 }
 
 message douyin_publish_action_response {

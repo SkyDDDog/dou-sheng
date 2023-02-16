@@ -9,9 +9,9 @@ import (
 func NewRouter(service ...interface{}) *gin.Engine {
 	ginRouter := gin.Default()
 	ginRouter.Use(middleware.Cors(), middleware.InitMiddleware(service), middleware.ErrorMiddleware())
-	//store := cookie.NewStore([]byte("something-very-secret"))
-	//ginRouter.Use(sessions.Sessions("mysession", store))
+
 	ginRouter.Static("/static", "./public")
+	ginRouter.POST("/test", handler.UploadPhoto)
 	v1 := ginRouter.Group("/douyin")
 	{
 		v1.GET("ping", func(context *gin.Context) {
@@ -41,7 +41,7 @@ func NewRouter(service ...interface{}) *gin.Engine {
 			v1.GET("/relation/friend/list/", handler.FriendList)
 
 			v1.POST("/message/action/", handler.MessageAction)
-			v1.GET("/message/chat/", handler.UserChat)
+			v1.GET("/message/chat/", handler.MessageChat)
 		}
 	}
 	return ginRouter

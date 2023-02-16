@@ -1,0 +1,28 @@
+server:
+  domain: cos
+  version: 1.0
+  jwtSecret: ErHuo
+  grpcAddress: "127.0.0.1:10006"
+
+mysql:
+  driverName: mysql
+  host: 127.0.0.1
+  port: 3306
+  database: dousheng
+  username: root
+  password: 9738faq
+  charset: utf8mb4
+
+etcd:
+  address: 127.0.0.1:2379
+
+redis:
+  address: 127.0.0.1:6379
+  password:
+
+cos:
+  region: ap-guangzhou
+  bucket: ExampleBucket
+  appid: 1234567890
+  secretId: EXAMPLESECRETID
+  secretKey: BUGAOSUNI

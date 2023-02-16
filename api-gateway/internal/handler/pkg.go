@@ -45,3 +45,11 @@ func PanicIfMessageError(err error) {
 		panic(err)
 	}
 }
+
+func PanicIfCosError(err error) {
+	if err != nil {
+		err = errors.New("cosService--" + err.Error())
+		util.LogrusObj.Info(err)
+		panic(err)
+	}
+}

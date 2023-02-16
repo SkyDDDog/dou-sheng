@@ -4,6 +4,8 @@ option go_package = "/internal/service;service";
 
 message Message {
   int64 id = 1; // 消息id
-  string content = 2; // 消息内容
-  string create_time = 3; // 消息创建时间
+  int64 to_user_id = 2; // 该消息接收者的id
+  int64 from_user_id = 3; // 该消息发送者的id
+  string content = 4; // 消息内容
+  int64 create_time = 5; // 消息创建时间
 }

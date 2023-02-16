@@ -2,15 +2,16 @@ package handler
 
 import (
 	"api-gateway/internal/service"
+	"api-gateway/middleware"
 	"api-gateway/pkg/e"
 	"api-gateway/pkg/res"
 	"api-gateway/pkg/util"
+	"bytes"
 	"context"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
+	"io"
 	"net/http"
-	"path/filepath"
 )
 
 // 视频投稿
@@ -19,29 +20,45 @@ func ActionVideo(ginCtx *gin.Context) {
 	PanicIfVideoError(ginCtx.ShouldBindWith(&videoReq, binding.Form))
 	// 从gin.Key中取出服务实例
 	videoService := ginCtx.Keys["video"].(service.VideoServiceClient)
+	cosService := ginCtx.Keys["cos"].(service.CosServiceClient)
 	claims, _ := util.ParseToken(videoReq.Token)
 	videoReq.UserId = claims.UserID
 
+	videoId := int64(middleware.GenID())
+	data, err := ginCtx.FormFile("data")
+	//fmt.Println("data: ", data)
+	PanicIfVideoError(err)
+	dataContent, _ := data.Open()
+	buff := new(bytes.Buffer)
+	//fmt.Println("buff: ", buff)
+	_, err = io.Copy(buff, dataContent)
+	PanicIfVideoError(err)
+	cosReq := &service.CosUploadRequest{
+		Id:   videoId,
+		Data: buff.Bytes(),
+	}
+	cosResp, err := cosService.UploadFile(context.Background(), cosReq)
+	PanicIfCosError(err)
+
+	videoReq.VideoId = videoId
+	videoReq.VideoUrl = cosResp.GetVideoUrl()
+	videoReq.CoverUrl = cosResp.GetCoverUrl()
 	videoResp, err := videoService.ActionVideo(context.Background(), &videoReq)
 	PanicIfVideoError(err)
-	videoId := videoResp.VideoId
-	data, err := ginCtx.FormFile("data")
-	if err != nil {
-		videoResp.StatusCode = e.ErrorUploadFail
-	}
+
 	//filename := filepath.Base(data.Filename)
-	// 保存文件至本地
-	finalName := fmt.Sprintf("%d.%s", videoId, "mp4")
-	saveFile := filepath.Join("./public/video/", finalName)
-	err = ginCtx.SaveUploadedFile(data, saveFile)
-	if err != nil {
-		videoResp.StatusCode = e.ErrorDownloadFail
-	}
-	// 生成缩略图
-	err = util.GetSnapshot(videoId, 1)
-	if err != nil {
-		videoResp.StatusCode = e.ErrorSnapshotFail
-	}
+	//// 保存文件至本地
+	//finalName := fmt.Sprintf("%d.%s", videoId, "mp4")
+	//saveFile := filepath.Join("./public/video/", finalName)
+	//err = ginCtx.SaveUploadedFile(data, saveFile)
+	//if err != nil {
+	//	videoResp.StatusCode = e.ErrorDownloadFail
+	//}
+	//// 生成缩略图
+	//err = util.GetSnapshot(videoId, 1)
+	//if err != nil {
+	//	videoResp.StatusCode = e.ErrorSnapshotFail
+	//}
 	r := res.Response{
 		StatusCode: videoResp.GetStatusCode(),
 		StatusMsg:  e.GetMsg(videoResp.GetStatusCode()),

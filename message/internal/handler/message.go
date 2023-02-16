@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"errors"
+	"fmt"
 	"message/internal/repository"
 	"message/internal/service"
 	"message/pkg/e"
@@ -16,7 +17,7 @@ func NewMessageService() *MessageService {
 	return &MessageService{}
 }
 
-func (*MessageService) UserChat(ctx context.Context, req *service.DouyinMessageChatRequest) (resp *service.DouyinMessageChatResponse, err error) {
+func (*MessageService) MessageChat(ctx context.Context, req *service.DouyinMessageChatRequest) (resp *service.DouyinMessageChatResponse, err error) {
 	var message repository.Message
 	resp = new(service.DouyinMessageChatResponse)
 	resp.StatusCode = e.SUCCESS
@@ -24,7 +25,9 @@ func (*MessageService) UserChat(ctx context.Context, req *service.DouyinMessageC
 	if err != nil {
 		resp.StatusCode = e.ERROR
 	}
+	fmt.Println(mList)
 	resp.MessageList = repository.BuildMessages(mList)
+	fmt.Println(resp.MessageList)
 	resp.StatusMsg = e.GetMsg(resp.GetStatusCode())
 	return resp, err
 }

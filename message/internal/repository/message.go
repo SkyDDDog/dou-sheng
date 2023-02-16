@@ -12,7 +12,8 @@ type Message struct {
 
 func (*Message) UserChat(req *service.DouyinMessageChatRequest) (mList []Message, err error) {
 	err = DB.Model(&Message{}).
-		Where("from_user_id = ? and to_user_id = ?", req.FromUserId, req.ToUserId).
+		Where("(from_id = ? and to_id = ?) or (from_id = ? and to_id = ?)", req.FromUserId, req.ToUserId, req.ToUserId, req.GetFromUserId()).
+		Order("create_date asc").
 		Find(&mList).Error
 	return mList, err
 }
@@ -30,8 +31,10 @@ func (*Message) CreateMessage(req *service.DouyinMessageActionRequest) error {
 func BuildMessage(item Message) *service.Message {
 	return &service.Message{
 		Id:         item.MessageId,
+		ToUserId:   item.ToId,
+		FromUserId: item.FromId,
 		Content:    item.Content,
-		CreateTime: item.Create_date.Format("2006-01-02 03:04:05"),
+		CreateTime: item.Create_date.Unix(),
 	}
 }
 

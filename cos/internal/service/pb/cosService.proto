@@ -1,0 +1,20 @@
+syntax = "proto3";
+package pb;
+option go_package = "/internal/service;service";
+
+message cos_upload_request {
+  int64 id = 1;  // 视频id
+  bytes data = 2; // 视频数据
+}
+
+message cos_upload_response {
+  int32 status_code = 1;  // 状态码, 0-成功, 其他值-失败
+  string status_msg = 2; // 返回状态描述
+  int32 id = 3;  // 视频id
+  string video_url = 4; // 视频url
+  string cover_url = 5; // 封面url
+}
+
+service CosService {
+  rpc UploadFile(cos_upload_request) returns(cos_upload_response);
+}

@@ -13,7 +13,8 @@ func JWT() gin.HandlerFunc {
 		var code int32
 		var data interface{}
 		code = 200
-		token := c.GetHeader("Authorization")
+		//token := c.GetHeader("Authorization")
+		token := c.Query("token")
 		if token == "" {
 			code = 404
 		} else {

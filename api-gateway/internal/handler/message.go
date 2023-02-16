@@ -11,7 +11,7 @@ import (
 	"net/http"
 )
 
-func UserChat(ginCtx *gin.Context) {
+func MessageChat(ginCtx *gin.Context) {
 	var msgReq service.DouyinMessageChatRequest
 	PanicIfMessageError(ginCtx.ShouldBindWith(&msgReq, binding.Query))
 	// 从gin.Key中取出服务实例

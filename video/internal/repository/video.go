@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"github.com/spf13/viper"
-	"strconv"
 	"video/internal/service"
 )
 
@@ -10,6 +8,8 @@ type Video struct {
 	VideoId  int64 `gorm:"primarykey"`
 	AuthorId int64
 	Title    string
+	CoverUrl string
+	VideoUrl string
 	Model
 }
 
@@ -18,7 +18,9 @@ func (*Video) CreateVideo(req *service.DouyinPublishActionRequest) (video Video,
 	video = Video{
 		AuthorId: req.UserId,
 		Title:    req.Title,
-		Model:    Model{},
+		CoverUrl: req.CoverUrl,
+		VideoUrl: req.VideoUrl,
+		VideoId:  req.VideoId,
 	}
 	err = DB.Create(&video).Error
 	return video, err
@@ -44,12 +46,14 @@ func (*Video) VideoFeed(req *service.DouyinFeedRequest) (videoList []Video, err 
 }
 
 func BuildVideo(item Video) *service.Video {
-	prefix := "http://" + viper.GetString("server.host") + ":11111/static/"
+	//prefix := "http://" + viper.GetString("server.host") + ":11111/static/"
 	return &service.Video{
-		Id:            item.VideoId,
-		Author:        &service.User{Id: item.AuthorId},
-		PlayUrl:       prefix + "video/" + strconv.FormatInt(item.VideoId, 10) + ".mp4",
-		CoverUrl:      prefix + "cover/" + strconv.FormatInt(item.VideoId, 10) + ".png",
+		Id:     item.VideoId,
+		Author: &service.User{Id: item.AuthorId},
+		//PlayUrl:       prefix + "video/" + strconv.FormatInt(item.VideoId, 10) + ".mp4",
+		//CoverUrl:      prefix + "cover/" + strconv.FormatInt(item.VideoId, 10) + ".png",
+		PlayUrl:       item.VideoUrl,
+		CoverUrl:      item.CoverUrl,
 		FavoriteCount: 0,
 		CommentCount:  0,
 		IsFavorite:    false,
