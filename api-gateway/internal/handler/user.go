@@ -52,7 +52,7 @@ func UserShow(ginCtx *gin.Context) {
 	PanicIfUserError(ginCtx.BindQuery(&userReq))
 	// 从gin.Key中取出服务实例
 	userService := ginCtx.Keys["user"].(service.UserServiceClient)
-	relationService := ginCtx.Keys["relation"].(service.RelationServiceClient)
+	relationService := ginCtx.Keys["main"].(service.RelationServiceClient)
 	claims, _ := util.ParseToken(userReq.Token)
 	userResp, err := userService.UserShow(context.Background(), &userReq)
 	relationReq := &service.UserId_Request{

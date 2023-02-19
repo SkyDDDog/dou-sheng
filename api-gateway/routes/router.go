@@ -35,10 +35,10 @@ func NewRouter(service ...interface{}) *gin.Engine {
 			v1.POST("/comment/action/", handler.CommentAction)
 			v1.GET("/comment/list/", handler.CommentList)
 
-			v1.POST("/relation/action/", handler.RelationAction)
-			v1.GET("/relation/follow/list/", handler.FollowList)
-			v1.GET("/relation/follower/list/", handler.FollowerList)
-			v1.GET("/relation/friend/list/", handler.FriendList)
+			v1.POST("/main/action/", handler.RelationAction)
+			v1.GET("/main/follow/list/", handler.FollowList)
+			v1.GET("/main/follower/list/", handler.FollowerList)
+			v1.GET("/main/friend/list/", handler.FriendList)
 
 			v1.POST("/message/action/", handler.MessageAction)
 			v1.GET("/message/chat/", handler.MessageChat)

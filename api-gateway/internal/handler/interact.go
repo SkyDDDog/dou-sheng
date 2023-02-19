@@ -15,7 +15,7 @@ func FavoriteAction(ginCtx *gin.Context) {
 	var ufReq service.DouyinFavoriteActionRequest
 	PanicIfInteractError(ginCtx.ShouldBindWith(&ufReq, binding.Query))
 	// 从gin.Key中取出服务实例
-	interactService := ginCtx.Keys["interact"].(service.InteractServiceClient)
+	interactService := ginCtx.Keys["main"].(service.InteractServiceClient)
 	claims, _ := util.ParseToken(ufReq.Token)
 	ufReq.UserId = claims.UserID
 
@@ -33,10 +33,10 @@ func FavoriteList(ginCtx *gin.Context) {
 	var flReq service.DouyinFavoriteListRequest
 	PanicIfInteractError(ginCtx.ShouldBindWith(&flReq, binding.Query))
 	// 从gin.Key中取出服务实例
-	interactService := ginCtx.Keys["interact"].(service.InteractServiceClient)
+	interactService := ginCtx.Keys["main"].(service.InteractServiceClient)
 	videoService := ginCtx.Keys["video"].(service.VideoServiceClient)
 	userService := ginCtx.Keys["user"].(service.UserServiceClient)
-	relationService := ginCtx.Keys["relation"].(service.RelationServiceClient)
+	relationService := ginCtx.Keys["main"].(service.RelationServiceClient)
 	claims, _ := util.ParseToken(flReq.Token)
 	resp, err := interactService.FavoriteList(context.Background(), &flReq)
 	PanicIfInteractError(err)
@@ -84,9 +84,9 @@ func CommentAction(ginCtx *gin.Context) {
 	var caReq service.DouyinCommentActionRequest
 	PanicIfInteractError(ginCtx.ShouldBindWith(&caReq, binding.Query))
 	// 从gin.Key中取出服务实例
-	interactService := ginCtx.Keys["interact"].(service.InteractServiceClient)
+	interactService := ginCtx.Keys["main"].(service.InteractServiceClient)
 	userService := ginCtx.Keys["user"].(service.UserServiceClient)
-	relationService := ginCtx.Keys["relation"].(service.RelationServiceClient)
+	relationService := ginCtx.Keys["main"].(service.RelationServiceClient)
 	claims, _ := util.ParseToken(caReq.Token)
 	caReq.UserId = claims.UserID
 	resp, err := interactService.CommentAction(context.Background(), &caReq)
@@ -120,9 +120,9 @@ func CommentList(ginCtx *gin.Context) {
 	var clReq service.DouyinCommentListRequest
 	PanicIfInteractError(ginCtx.ShouldBindWith(&clReq, binding.Query))
 	// 从gin.Key中取出服务实例
-	interactService := ginCtx.Keys["interact"].(service.InteractServiceClient)
+	interactService := ginCtx.Keys["main"].(service.InteractServiceClient)
 	userService := ginCtx.Keys["user"].(service.UserServiceClient)
-	relationService := ginCtx.Keys["relation"].(service.RelationServiceClient)
+	relationService := ginCtx.Keys["main"].(service.RelationServiceClient)
 	claims, _ := util.ParseToken(clReq.Token)
 	resp, err := interactService.CommentList(context.Background(), &clReq)
 	PanicIfInteractError(err)

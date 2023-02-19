@@ -40,10 +40,10 @@ func startListen() {
 	// 服务名
 	userServiceName := viper.GetString("domain.user")
 	videoServiceName := viper.GetString("domain.video")
-	interactServiceName := viper.GetString("domain.interact")
-	relationServiceName := viper.GetString("domain.relation")
+	interactServiceName := viper.GetString("domain.main")
+	relationServiceName := viper.GetString("domain.main")
 	messageServiceName := viper.GetString("domain.message")
-	cosServiceName := viper.GetString("domain.cos")
+	cosServiceName := viper.GetString("domain.main")
 
 	// RPC 连接
 	connUser, err := RPCConnect(ctx, userServiceName, etcdRegister)

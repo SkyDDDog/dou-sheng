@@ -22,6 +22,7 @@ func (*MessageService) MessageChat(ctx context.Context, req *service.DouyinMessa
 	resp = new(service.DouyinMessageChatResponse)
 	resp.StatusCode = e.SUCCESS
 	mList, err := message.UserChat(req)
+	fmt.Println(mList)
 	if err != nil {
 		resp.StatusCode = e.ERROR
 	}
