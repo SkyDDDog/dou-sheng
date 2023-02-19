@@ -20,20 +20,20 @@ func InitCos() {
 	}
 	COS_CLIENT = cos.NewClient(b, &http.Client{
 		Transport: &cos.AuthorizationTransport{
-			SecretID:  viper.GetString("cos.secretId"),
-			SecretKey: viper.GetString("cos.secretKey"),
+			SecretID:  viper.GetString("main.secretId"),
+			SecretKey: viper.GetString("main.secretKey"),
 		},
 	})
 }
 
 func GetBucketUrl() string {
-	bucket := viper.GetString("cos.bucket")
-	appid := viper.GetString("cos.appid")
-	region := viper.GetString("cos.region")
-	return "https://" + bucket + "-" + appid + ".cos." + region + ".myqcloud.com"
+	bucket := viper.GetString("main.bucket")
+	appid := viper.GetString("main.appid")
+	region := viper.GetString("main.region")
+	return "https://" + bucket + "-" + appid + ".main." + region + ".myqcloud.com"
 }
 
 func GetServiceUrl() string {
-	region := viper.GetString("cos.region")
+	region := viper.GetString("main.region")
 	return "https://cos." + region + ".myqcloud.com"
 }
