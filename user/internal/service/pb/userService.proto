@@ -44,5 +44,5 @@ service UserService {
   rpc UserLogin(douyin_user_login_request) returns(douyin_user_login_response);
   rpc UserRegister(douyin_user_register_request) returns(douyin_user_register_response);
   rpc UserShow(douyin_user_request) returns(douyin_user_response);
-  rpc UserById(UserId_Request) returns(User);
+  rpc UserById(user_id_request) returns(User);
 }

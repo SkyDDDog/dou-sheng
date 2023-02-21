@@ -25,7 +25,7 @@ type UserServiceClient interface {
 	UserLogin(ctx context.Context, in *DouyinUserLoginRequest, opts ...grpc.CallOption) (*DouyinUserLoginResponse, error)
 	UserRegister(ctx context.Context, in *DouyinUserRegisterRequest, opts ...grpc.CallOption) (*DouyinUserRegisterResponse, error)
 	UserShow(ctx context.Context, in *DouyinUserRequest, opts ...grpc.CallOption) (*DouyinUserResponse, error)
-	UserById(ctx context.Context, in *UserId_Request, opts ...grpc.CallOption) (*User, error)
+	UserById(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*User, error)
 }
 
 type userServiceClient struct {
@@ -63,7 +63,7 @@ func (c *userServiceClient) UserShow(ctx context.Context, in *DouyinUserRequest,
 	return out, nil
 }
 
-func (c *userServiceClient) UserById(ctx context.Context, in *UserId_Request, opts ...grpc.CallOption) (*User, error) {
+func (c *userServiceClient) UserById(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*User, error) {
 	out := new(User)
 	err := c.cc.Invoke(ctx, "/pb.UserService/UserById", in, out, opts...)
 	if err != nil {
@@ -79,7 +79,7 @@ type UserServiceServer interface {
 	UserLogin(context.Context, *DouyinUserLoginRequest) (*DouyinUserLoginResponse, error)
 	UserRegister(context.Context, *DouyinUserRegisterRequest) (*DouyinUserRegisterResponse, error)
 	UserShow(context.Context, *DouyinUserRequest) (*DouyinUserResponse, error)
-	UserById(context.Context, *UserId_Request) (*User, error)
+	UserById(context.Context, *UserIdRequest) (*User, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -96,7 +96,7 @@ func (UnimplementedUserServiceServer) UserRegister(context.Context, *DouyinUserR
 func (UnimplementedUserServiceServer) UserShow(context.Context, *DouyinUserRequest) (*DouyinUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserShow not implemented")
 }
-func (UnimplementedUserServiceServer) UserById(context.Context, *UserId_Request) (*User, error) {
+func (UnimplementedUserServiceServer) UserById(context.Context, *UserIdRequest) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserById not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
@@ -167,7 +167,7 @@ func _UserService_UserShow_Handler(srv interface{}, ctx context.Context, dec fun
 }
 
 func _UserService_UserById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UserId_Request)
+	in := new(UserIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -179,7 +179,7 @@ func _UserService_UserById_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: "/pb.UserService/UserById",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).UserById(ctx, req.(*UserId_Request))
+		return srv.(UserServiceServer).UserById(ctx, req.(*UserIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

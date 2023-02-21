@@ -20,7 +20,7 @@ func ActionVideo(ginCtx *gin.Context) {
 	PanicIfVideoError(ginCtx.ShouldBindWith(&videoReq, binding.Form))
 	// 从gin.Key中取出服务实例
 	videoService := ginCtx.Keys["video"].(service.VideoServiceClient)
-	cosService := ginCtx.Keys["main"].(service.CosServiceClient)
+	cosService := ginCtx.Keys["cos"].(service.CosServiceClient)
 	claims, _ := util.ParseToken(videoReq.Token)
 	videoReq.UserId = claims.UserID
 
@@ -72,8 +72,8 @@ func VideoList(ginCtx *gin.Context) {
 	PanicIfVideoError(ginCtx.BindQuery(&videoReq))
 	// 从gin.Key中取出服务实例
 	videoService := ginCtx.Keys["video"].(service.VideoServiceClient)
-	interactService := ginCtx.Keys["main"].(service.InteractServiceClient)
-	relationService := ginCtx.Keys["main"].(service.RelationServiceClient)
+	interactService := ginCtx.Keys["interact"].(service.InteractServiceClient)
+	relationService := ginCtx.Keys["relation"].(service.RelationServiceClient)
 	claims, _ := util.ParseToken(videoReq.Token)
 	videoResp, err := videoService.VideoList(context.Background(), &videoReq)
 	PanicIfVideoError(err)
@@ -89,7 +89,7 @@ func VideoList(ginCtx *gin.Context) {
 		videoResp.VideoList[i].CommentCount = videoInfo.CommentCount
 		videoResp.VideoList[i].IsFavorite = videoInfo.IsFavorite
 
-		relationReq := &service.UserId_Request{
+		relationReq := &service.UserIdRequest{
 			UserId:      videoResp.VideoList[i].Author.Id,
 			RequesterId: claims.UserID,
 		}
@@ -115,8 +115,8 @@ func VideoFeed(ginCtx *gin.Context) {
 	// 从gin.Key中取出服务实例
 	videoService := ginCtx.Keys["video"].(service.VideoServiceClient)
 	userService := ginCtx.Keys["user"].(service.UserServiceClient)
-	interactService := ginCtx.Keys["main"].(service.InteractServiceClient)
-	relationService := ginCtx.Keys["main"].(service.RelationServiceClient)
+	interactService := ginCtx.Keys["interact"].(service.InteractServiceClient)
+	relationService := ginCtx.Keys["relation"].(service.RelationServiceClient)
 	claims, _ := util.ParseToken(videoReq.Token)
 	videoResp, err := videoService.VideoFeed(context.Background(), &videoReq)
 	PanicIfVideoError(err)
@@ -130,7 +130,7 @@ func VideoFeed(ginCtx *gin.Context) {
 		videoResp.VideoList[i].FavoriteCount = videoInfo.FavoriteCount
 		videoResp.VideoList[i].CommentCount = videoInfo.CommentCount
 		videoResp.VideoList[i].IsFavorite = videoInfo.IsFavorite
-		relationReq := &service.UserId_Request{
+		relationReq := &service.UserIdRequest{
 			UserId:      videoResp.VideoList[i].Author.Id,
 			RequesterId: claims.UserID,
 		}

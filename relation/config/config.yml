@@ -1,5 +1,5 @@
 server:
-  domain: main
+  domain: relation
   version: 1.0
   jwtSecret: ErHuo
   grpcAddress: "127.0.0.1:10004"

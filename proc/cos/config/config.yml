@@ -1,0 +1,32 @@
+server:
+  domain: cos
+  version: 1.0
+  jwtSecret: ErHuo
+  grpcAddress: "etcd:10006"
+
+mysql:
+  driverName: mysql
+  host: mysql
+  port: 3306
+  database: dousheng
+  username: dousheng
+  password: dousheng
+  charset: utf8
+
+etcd:
+  address: etcd:2379
+
+redis:
+  address: redis:6379
+  password:
+
+cos:
+  region: ap-guangzhou
+#  bucket: ExampleBucket
+#  appid: 1234567890
+#  secretId: EXAMPLESECRETID
+#  secretKey: BUGAOSUNI
+  bucket: dousheng
+  appid: 1313040197
+  secretId: AKID5604ykMnBLMFzWsZAcsyyrFXeWDl9KFw
+  secretKey: cKvNn383my30XxFxjOxPmR3eCd1RBoHb

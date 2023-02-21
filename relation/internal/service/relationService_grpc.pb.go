@@ -26,7 +26,7 @@ type RelationServiceClient interface {
 	FollowList(ctx context.Context, in *DouyinRelationFollowListRequest, opts ...grpc.CallOption) (*DouyinRelationFollowListResponse, error)
 	FollowerList(ctx context.Context, in *DouyinRelationFollowerListRequest, opts ...grpc.CallOption) (*DouyinRelationFollowerListResponse, error)
 	FriendList(ctx context.Context, in *DouyinRelationFriendListRequest, opts ...grpc.CallOption) (*DouyinRelationFriendListResponse, error)
-	UserRelationInfoById(ctx context.Context, in *UserId_Request, opts ...grpc.CallOption) (*User, error)
+	UserRelationInfoById(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*User, error)
 }
 
 type relationServiceClient struct {
@@ -73,7 +73,7 @@ func (c *relationServiceClient) FriendList(ctx context.Context, in *DouyinRelati
 	return out, nil
 }
 
-func (c *relationServiceClient) UserRelationInfoById(ctx context.Context, in *UserId_Request, opts ...grpc.CallOption) (*User, error) {
+func (c *relationServiceClient) UserRelationInfoById(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*User, error) {
 	out := new(User)
 	err := c.cc.Invoke(ctx, "/pb.RelationService/UserRelationInfoById", in, out, opts...)
 	if err != nil {
@@ -90,7 +90,7 @@ type RelationServiceServer interface {
 	FollowList(context.Context, *DouyinRelationFollowListRequest) (*DouyinRelationFollowListResponse, error)
 	FollowerList(context.Context, *DouyinRelationFollowerListRequest) (*DouyinRelationFollowerListResponse, error)
 	FriendList(context.Context, *DouyinRelationFriendListRequest) (*DouyinRelationFriendListResponse, error)
-	UserRelationInfoById(context.Context, *UserId_Request) (*User, error)
+	UserRelationInfoById(context.Context, *UserIdRequest) (*User, error)
 	mustEmbedUnimplementedRelationServiceServer()
 }
 
@@ -110,7 +110,7 @@ func (UnimplementedRelationServiceServer) FollowerList(context.Context, *DouyinR
 func (UnimplementedRelationServiceServer) FriendList(context.Context, *DouyinRelationFriendListRequest) (*DouyinRelationFriendListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FriendList not implemented")
 }
-func (UnimplementedRelationServiceServer) UserRelationInfoById(context.Context, *UserId_Request) (*User, error) {
+func (UnimplementedRelationServiceServer) UserRelationInfoById(context.Context, *UserIdRequest) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserRelationInfoById not implemented")
 }
 func (UnimplementedRelationServiceServer) mustEmbedUnimplementedRelationServiceServer() {}
@@ -199,7 +199,7 @@ func _RelationService_FriendList_Handler(srv interface{}, ctx context.Context, d
 }
 
 func _RelationService_UserRelationInfoById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UserId_Request)
+	in := new(UserIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -211,7 +211,7 @@ func _RelationService_UserRelationInfoById_Handler(srv interface{}, ctx context.
 		FullMethod: "/pb.RelationService/UserRelationInfoById",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RelationServiceServer).UserRelationInfoById(ctx, req.(*UserId_Request))
+		return srv.(RelationServiceServer).UserRelationInfoById(ctx, req.(*UserIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

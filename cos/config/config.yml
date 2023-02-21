@@ -1,5 +1,5 @@
 server:
-  domain: main
+  domain: cos
   version: 1.0
   jwtSecret: ErHuo
   grpcAddress: "127.0.0.1:10006"
@@ -22,11 +22,8 @@ redis:
 
 cos:
   region: ap-guangzhou
-#  bucket: ExampleBucket
-#  appid: 1234567890
-#  secretId: EXAMPLESECRETID
-#  secretKey: BUGAOSUNI
-  bucket: dousheng
-  appid: 1313040197
-  secretId: AKID5604ykMnBLMFzWsZAcsyyrFXeWDl9KFw
-  secretKey: cKvNn383my30XxFxjOxPmR3eCd1RBoHb
+  bucket: ExampleBucket
+  appid: 1234567890
+  secretId: EXAMPLESECRETID
+  secretKey: BUGAOSUNI
+

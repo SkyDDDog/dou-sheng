@@ -46,12 +46,9 @@ func (*Video) VideoFeed(req *service.DouyinFeedRequest) (videoList []Video, err 
 }
 
 func BuildVideo(item Video) *service.Video {
-	//prefix := "http://" + viper.GetString("server.host") + ":11111/static/"
 	return &service.Video{
-		Id:     item.VideoId,
-		Author: &service.User{Id: item.AuthorId},
-		//PlayUrl:       prefix + "video/" + strconv.FormatInt(item.VideoId, 10) + ".mp4",
-		//CoverUrl:      prefix + "cover/" + strconv.FormatInt(item.VideoId, 10) + ".png",
+		Id:            item.VideoId,
+		Author:        &service.User{Id: item.AuthorId},
 		PlayUrl:       item.VideoUrl,
 		CoverUrl:      item.CoverUrl,
 		FavoriteCount: 0,

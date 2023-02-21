@@ -55,7 +55,7 @@ func (*UserService) UserShow(ctx context.Context, req *service.DouyinUserRequest
 	return resp, err
 }
 
-func (*UserService) UserById(ctx context.Context, req *service.UserId_Request) (resp *service.User, err error) {
+func (*UserService) UserById(ctx context.Context, req *service.UserIdRequest) (resp *service.User, err error) {
 	var user repository.User
 	user, err = user.UserById(req.UserId)
 	if err != nil {

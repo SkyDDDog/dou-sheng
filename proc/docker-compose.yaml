@@ -1,0 +1,129 @@
+version: '3'
+
+services:
+
+  # Database
+  mysql:
+    image: "mysql:5.7"
+    restart: always
+    ports:
+      - 33306:3306
+    volumes:
+      - ./pkg/config/sql:/docker-entrypoint-initdb.d
+    environment:
+      - MYSQL_DATABASE=dousheng
+      - MYSQL_USER=dousheng
+      - MYSQL_PASSWORD=dousheng
+      - MYSQL_ROOT_PASSWORD=123456
+
+  # Redis
+  redis:
+    image: "redis:latest"
+    restart: always
+    ports:
+      - 36379:6379
+    volumes:
+      - /usr/local/redis:/var/lib/redis
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+
+  # k-v store
+  etcd:
+    image: "quay.io/coreos/etcd:v3.5.5"
+    restart: always
+#    command: etcd -name etcd1 -listen-client-urls http://0.0.0.0:2379 -listen-peer-urls http://0.0.0.0:2380 #基本etcd配置 通过2380端口进行通信 通过2379端口监听
+    ports:
+      - 32379:2379
+    environment:
+      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
+      - ETCD_ADVERTISE_CLIENT_URLS=http://0.0.0.0:2379
+      - ETCD_API=3
+#  etcd-keeper:
+#    image: "evildecay/etcdkeeper:latest"
+#    restart: always
+#    ports:
+#      - 38080:8080
+#    command:
+#      - "-h etcd"
+#    depends_on:
+#      - etcd
+
+  gateway:
+    build:
+      context: gateway
+      dockerfile: Dockerfile
+    ports:
+      - "33333:4000"
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - ./pkg/logs/gateway:/app/log
+    depends_on:
+      - mysql
+      - etcd
+  cos:
+    build:
+      context: cos
+      dockerfile: Dockerfile
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - ./pkg/logs/cos:/log
+    depends_on:
+      - etcd
+  interact:
+    build:
+      context: interact
+      dockerfile: Dockerfile
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - ./pkg/logs/interact:/app/log
+    depends_on:
+      - mysql
+      - etcd
+  message:
+    build:
+      context: message
+      dockerfile: Dockerfile
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - ./pkg/logs/message:/app/log
+    depends_on:
+      - mysql
+      - redis
+      - etcd
+  relation:
+    build:
+      context: relation
+      dockerfile: Dockerfile
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - ./pkg/logs/relation:/app/log
+    depends_on:
+      - mysql
+      - etcd
+  user:
+    build:
+      context: user
+      dockerfile: Dockerfile
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - ./pkg/logs/user:/app/log
+    depends_on:
+      - mysql
+      - etcd
+  video:
+    build:
+      context: video
+      dockerfile: Dockerfile
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - ./pkg/logs/video:/app/log
+    depends_on:
+      - mysql
+      - etcd

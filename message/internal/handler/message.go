@@ -26,9 +26,7 @@ func (*MessageService) MessageChat(ctx context.Context, req *service.DouyinMessa
 	if err != nil {
 		resp.StatusCode = e.ERROR
 	}
-	fmt.Println(mList)
 	resp.MessageList = repository.BuildMessages(mList)
-	fmt.Println(resp.MessageList)
 	resp.StatusMsg = e.GetMsg(resp.GetStatusCode())
 	return resp, err
 }

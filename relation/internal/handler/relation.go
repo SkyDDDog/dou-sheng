@@ -73,7 +73,7 @@ func (*RelationService) FriendList(ctx context.Context, req *service.DouyinRelat
 	return resp, err
 }
 
-func (*RelationService) UserRelationInfoById(ctx context.Context, req *service.UserId_Request) (resp *service.User, err error) {
+func (*RelationService) UserRelationInfoById(ctx context.Context, req *service.UserIdRequest) (resp *service.User, err error) {
 	uf := repository.UserFollow{
 		FromUserId: req.RequesterId,
 		ToUserId:   req.UserId,

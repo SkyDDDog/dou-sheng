@@ -16,7 +16,7 @@ func main() {
 	// 初始化配置
 	config.InitConfig()
 	repository.InitDB()
-	repository.InitRedisClient()
+	//repository.InitRedisClient()
 	// etcd 地址
 	etcdAddress := []string{viper.GetString("etcd.address")}
 	// 服务注册

@@ -13,7 +13,7 @@ etcd:
 domain:
   user: user
   video: video
-  interact: main
-  relation: main
+  interact: interact
+  relation: relation
   message: message
-  cos: main
+  cos: cos

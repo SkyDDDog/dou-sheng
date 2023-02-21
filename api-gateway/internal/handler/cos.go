@@ -14,7 +14,7 @@ import (
 
 func UploadPhoto(ginCtx *gin.Context) {
 	var req service.CosUploadRequest
-	cosService := ginCtx.Keys["main"].(service.CosServiceClient)
+	cosService := ginCtx.Keys["cos"].(service.CosServiceClient)
 	data, err := ginCtx.FormFile("data")
 	id, _ := strconv.ParseInt(ginCtx.PostForm("id"), 10, 64)
 	req.Id = id

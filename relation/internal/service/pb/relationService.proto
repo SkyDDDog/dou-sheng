@@ -53,6 +53,6 @@ service RelationService {
   rpc FollowList(douyin_relation_follow_list_request) returns(douyin_relation_follow_list_response);
   rpc FollowerList(douyin_relation_follower_list_request) returns(douyin_relation_follower_list_response);
   rpc FriendList(douyin_relation_friend_list_request) returns(douyin_relation_friend_list_response);
-  rpc UserRelationInfoById(UserId_Request) returns(User);
+  rpc UserRelationInfoById(user_id_request) returns(User);
 }
 

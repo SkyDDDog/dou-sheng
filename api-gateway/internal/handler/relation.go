@@ -15,7 +15,7 @@ func RelationAction(ginCtx *gin.Context) {
 	var relationReq service.DouyinRelationActionRequest
 	PanicIfRelationError(ginCtx.ShouldBindWith(&relationReq, binding.Query))
 	// 从gin.Key中取出服务实例
-	relationService := ginCtx.Keys["main"].(service.RelationServiceClient)
+	relationService := ginCtx.Keys["relation"].(service.RelationServiceClient)
 	claims, _ := util.ParseToken(relationReq.Token)
 	relationReq.UserId = claims.UserID
 	resp, err := relationService.RelationAction(context.Background(), &relationReq)
@@ -32,12 +32,12 @@ func FollowList(ginCtx *gin.Context) {
 	var relationReq service.DouyinRelationFollowListRequest
 	PanicIfRelationError(ginCtx.ShouldBindWith(&relationReq, binding.Query))
 	// 从gin.Key中取出服务实例
-	relationService := ginCtx.Keys["main"].(service.RelationServiceClient)
+	relationService := ginCtx.Keys["relation"].(service.RelationServiceClient)
 	userService := ginCtx.Keys["user"].(service.UserServiceClient)
 	resp, err := relationService.FollowList(context.Background(), &relationReq)
 	PanicIfRelationError(err)
 	for i, _ := range resp.UserList {
-		userReq := &service.UserId_Request{UserId: resp.UserList[i].Id}
+		userReq := &service.UserIdRequest{UserId: resp.UserList[i].Id}
 		user, err := userService.UserById(context.Background(), userReq)
 		PanicIfUserError(err)
 		resp.UserList[i].Name = user.Name
@@ -55,12 +55,12 @@ func FollowerList(ginCtx *gin.Context) {
 	var relationReq service.DouyinRelationFollowerListRequest
 	PanicIfRelationError(ginCtx.ShouldBindWith(&relationReq, binding.Query))
 	// 从gin.Key中取出服务实例
-	relationService := ginCtx.Keys["main"].(service.RelationServiceClient)
+	relationService := ginCtx.Keys["relation"].(service.RelationServiceClient)
 	userService := ginCtx.Keys["user"].(service.UserServiceClient)
 	resp, err := relationService.FollowerList(context.Background(), &relationReq)
 	PanicIfRelationError(err)
 	for i, _ := range resp.UserList {
-		userReq := &service.UserId_Request{UserId: resp.UserList[i].Id}
+		userReq := &service.UserIdRequest{UserId: resp.UserList[i].Id}
 		user, err := userService.UserById(context.Background(), userReq)
 		PanicIfUserError(err)
 		resp.UserList[i].Name = user.Name
@@ -78,12 +78,12 @@ func FriendList(ginCtx *gin.Context) {
 	var relationReq service.DouyinRelationFriendListRequest
 	PanicIfRelationError(ginCtx.ShouldBindWith(&relationReq, binding.Query))
 	// 从gin.Key中取出服务实例
-	relationService := ginCtx.Keys["main"].(service.RelationServiceClient)
+	relationService := ginCtx.Keys["relation"].(service.RelationServiceClient)
 	userService := ginCtx.Keys["user"].(service.UserServiceClient)
 	resp, err := relationService.FriendList(context.Background(), &relationReq)
 	PanicIfRelationError(err)
 	for i, _ := range resp.UserList {
-		userReq := &service.UserId_Request{UserId: resp.UserList[i].Id}
+		userReq := &service.UserIdRequest{UserId: resp.UserList[i].Id}
 		user, err := userService.UserById(context.Background(), userReq)
 		PanicIfUserError(err)
 		resp.UserList[i].Name = user.Name

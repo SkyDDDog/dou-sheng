@@ -40,8 +40,8 @@ func startListen() {
 	// 服务名
 	userServiceName := viper.GetString("domain.user")
 	videoServiceName := viper.GetString("domain.video")
-	interactServiceName := viper.GetString("domain.main")
-	relationServiceName := viper.GetString("domain.main")
+	interactServiceName := viper.GetString("domain.interact")
+	relationServiceName := viper.GetString("domain.relation")
 	messageServiceName := viper.GetString("domain.message")
 	cosServiceName := viper.GetString("domain.main")
 

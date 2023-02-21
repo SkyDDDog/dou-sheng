@@ -1,0 +1,19 @@
+server:
+  port: :4000
+  version: 1.0
+  jwtSecret: 38324
+
+redis:
+  address: redis:6379
+  password:
+
+etcd:
+  address: etcd:2379
+
+domain:
+  user: user
+  video: video
+  interact: interact
+  relation: relation
+  message: message
+  cos: cos

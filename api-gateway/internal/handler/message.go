@@ -6,7 +6,6 @@ import (
 	"api-gateway/pkg/res"
 	"api-gateway/pkg/util"
 	"context"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"net/http"
@@ -17,11 +16,9 @@ func MessageChat(ginCtx *gin.Context) {
 	PanicIfMessageError(ginCtx.ShouldBindWith(&msgReq, binding.Query))
 	// 从gin.Key中取出服务实例
 	messageService := ginCtx.Keys["message"].(service.MessageServiceClient)
-	fmt.Println(messageService)
 	claims, _ := util.ParseToken(msgReq.Token)
 	msgReq.FromUserId = claims.UserID
 	msgResp, err := messageService.MessageChat(context.Background(), &msgReq)
-	fmt.Println(msgResp.MessageList)
 	PanicIfMessageError(err)
 	r := res.MessageResponse{
 		StatusCode: msgResp.StatusCode,
